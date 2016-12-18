@@ -14,7 +14,9 @@ public class SmsReceiver extends BroadcastReceiver {
     public static  final String tag = "notifyme.SmsReceiver";
     public static  final String SmsAction = "android.provider.Telephony.SMS_RECEIVED";
     public SmsMessage currentMsg ;
-    StringBuilder msgString = new StringBuilder("") ;
+    StringBuilder msgString = new StringBuilder("")  ;
+    String msgContent = new String("");
+
     public SmsReceiver() {
 
     }
@@ -57,10 +59,12 @@ public class SmsReceiver extends BroadcastReceiver {
                 }
 
                 Log.d(tag,"message recorded: " + msgString);
-
                 this.forwardMsgToProcess(msgString.toString());
-
-
+                if(!msgContent.isEmpty())
+                {
+                    Log.d(tag,"start service");
+                    this.passInfoToService(context);
+                }
             }
             else{
                 Log.d(tag, "bundle is null");
@@ -74,7 +78,19 @@ public class SmsReceiver extends BroadcastReceiver {
     public void forwardMsgToProcess(String msgString) {
         Log.d(tag,"process the msg to look for numbers");
         praseMsg parsemsg = new praseMsg(msgString);
-        parsemsg.lookForNumber();
+        if(parsemsg.lookForNumber());
+        {
+            this.msgContent = parsemsg.numbers.toString();
+        }
         Log.d(tag,"numbers: " + parsemsg.numbers.toString());
+
+
+    }
+
+    private void passInfoToService(Context context) {
+        Intent intent = new Intent(context ,smsReceiverService.class );
+        intent.putExtra("msgcontent", msgContent);
+        context.startService(intent);
+
     }
 }
