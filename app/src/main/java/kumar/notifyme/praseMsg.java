@@ -30,20 +30,35 @@ public class praseMsg {
         Pattern pattren = Pattern.compile(regex);
         Matcher matcher = pattren.matcher(this.msg);   // get a matcher object
 
-        while(matcher.find())
+        try{
+            while(matcher.find())
+            {
+                Log.d(tag," number find(): " + matcher.find());
+                Log.d(tag , "number start(): "+ matcher.start());
+                Log.d(tag , "number end(): "+ matcher.end());
+                Log.d(tag,"number match: " + matcher.group());
+                numbers.append(matcher.group()+" ");
+            }
+
+        }catch(RuntimeException e)
         {
-            Log.d(tag," number find(): " + matcher.find());
-            Log.d(tag , "number start(): "+ matcher.start());
-            Log.d(tag , "number end(): "+ matcher.end());
-            Log.d(tag,"number match: " + matcher.group());
-            numbers.append(matcher.group()+" ");
+            Log.d(tag,"runtime exception in paresmsg.java : since no number found");
         }
-        if(numbers.length()==0)
+        catch(Exception e)
         {
-            return false;
+            Log.d(tag,"other exception : since no number  found. ");
+        }
+//        irrespect of number found or not , this  information must be passed
+        finally {
+            if(numbers.length()==0)
+            {
+                return false;
+            }
+
+            return true;
+
         }
 
-        return true;
     }
 
 

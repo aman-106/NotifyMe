@@ -43,6 +43,7 @@ public class smsReceiverService extends Service {
         notification = new Notification.Builder(this)
                 .setTicker("something")
                 .setSmallIcon(R.drawable.pi)
+                .setAutoCancel(true)
                 .setWhen(System.currentTimeMillis());
 
         notificationIntent = new Intent(this, HomePage.class);
@@ -50,12 +51,21 @@ public class smsReceiverService extends Service {
         notification.setContentIntent(pendingIntent);
         notification.setContentTitle("Content ");
         notification.setContentText(this.parsedMsgConetnt);
+//        inclusive or bitwise function
+//         notification.build().flags = notification.build().flags | Notification.FLAG_AUTO_CANCEL;
+        notification.build().flags |= Notification.FLAG_AUTO_CANCEL;
         Log.d(tag,"start notification");
         nm.notify(notifyId,notification.build());
         Log.d(tag,"stop the service");
         this.stopSelf();
         return startId;
     }
+
+//    @Override
+//    public void onDestroy()
+//    {
+//
+//    }
 
 
     @Override
